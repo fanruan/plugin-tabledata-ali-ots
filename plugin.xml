@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plugin>
+    <id>com.fr.solution.plugin.db.ots</id>
+    <name><![CDATA[阿里云OTS数据集]]></name>
+    <active>yes</active>
+    <version>1.0</version>
+    <env-version>8.0</env-version>
+	<jartime>2016-05-20</jartime>
+    <vendor>finereport.richie</vendor>
+    <description><![CDATA[可以连接阿里云的OTS数据库并进行查询。]]></description>
+    <change-notes><![CDATA[
+        [2016-09-05]初始化插件</p>
+    ]]></change-notes>
+    <extra-core>
+        <LocaleFinder class="com.fr.plugin.db.ots.OTSLocaleFinder"/>
+    </extra-core>
+    <extra-report>
+        
+    </extra-report>
+    <extra-designer>
+        <ConnectionProvider class="com.fr.plugin.db.ots.OTSConnectionImpl"/>
+        <TableDataDefineProvider class="com.fr.plugin.db.ots.OTSTableDataDefine"/>
+        <ServerTableDataDefineProvider class="com.fr.plugin.db.ots.OTSTableDataDefine"/>
+    </extra-designer>
+</plugin>
