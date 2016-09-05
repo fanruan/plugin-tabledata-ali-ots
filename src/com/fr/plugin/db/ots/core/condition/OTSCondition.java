@@ -14,4 +14,6 @@ public interface OTSCondition extends XMLable {
     ColumnCondition createColumnCondition();
 
     CompositeCondition.LogicOperator getLogicOperator();
+
+    int getConditionCount();
 }

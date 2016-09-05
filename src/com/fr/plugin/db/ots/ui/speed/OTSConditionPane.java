@@ -46,7 +46,7 @@ public class OTSConditionPane extends BasicPane {
     }
 
     private void updateConditionCountLabel() {
-        conditionCountLabel.setText("有N个过滤条件");
+        conditionCountLabel.setText((condition == null ? 0 : condition.getConditionCount()) + "个过滤条件");
     }
 
     public OTSCondition update() {
@@ -55,6 +55,7 @@ public class OTSConditionPane extends BasicPane {
 
     public void populate(OTSCondition condition) {
         this.condition = condition;
+        updateConditionCountLabel();
     }
 
     @Override

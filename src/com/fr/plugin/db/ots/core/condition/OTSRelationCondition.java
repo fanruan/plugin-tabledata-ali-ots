@@ -23,6 +23,11 @@ public class OTSRelationCondition extends AbstractOTSCondtion {
     }
 
     @Override
+    public int getConditionCount() {
+        return 1;
+    }
+
+    @Override
     public ColumnCondition createColumnCondition() {
         return new RelationalCondition(columnName, compareOperator, columnValue);
     }

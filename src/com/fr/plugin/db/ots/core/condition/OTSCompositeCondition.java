@@ -22,6 +22,11 @@ public class OTSCompositeCondition extends AbstractOTSCondtion {
     }
 
     @Override
+    public int getConditionCount() {
+        return getConditionSize();
+    }
+
+    @Override
     public ColumnCondition createColumnCondition() {
         if (conditionList == null) {
             return null;
