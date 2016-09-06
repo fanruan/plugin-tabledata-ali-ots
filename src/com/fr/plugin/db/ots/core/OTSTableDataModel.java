@@ -52,8 +52,12 @@ public class OTSTableDataModel implements DataModel {
                                        OTSCondition condition,
                                        int rowCount) {
         RangeIteratorParameter param = new RangeIteratorParameter(tableName);
-        param.setInclusiveStartPrimaryKey(startRowPrimaryKey);
-        param.setExclusiveEndPrimaryKey(endRowPrimaryKey);
+        if (startRowPrimaryKey != null) {
+            param.setInclusiveStartPrimaryKey(startRowPrimaryKey);
+        }
+        if (endRowPrimaryKey != null) {
+            param.setExclusiveEndPrimaryKey(endRowPrimaryKey);
+        }
         if (condition != null) {
             param.setFilter(condition.createColumnCondition());
         }
