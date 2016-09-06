@@ -5,6 +5,7 @@ import com.aliyun.openservices.ots.OTSException;
 import com.fr.data.impl.AbstractDatabaseConnection;
 import com.fr.data.impl.Connection;
 import com.fr.general.Inter;
+import com.fr.plugin.db.ots.core.fun.OTSConfigMangerProvider;
 import com.fr.stable.CodeUtils;
 import com.fr.stable.StableUtils;
 import com.fr.stable.StringUtils;
@@ -71,7 +72,10 @@ public class OTSDatabaseConnection extends AbstractDatabaseConnection {
     }
 
     public OTSClient createOTSClient() {
-        return new OTSClient(endPoint, accessId, accessKey, instanceName);
+
+        OTSConfigMangerProvider config = OTSConfigManager.getProviderInstance();
+
+        return new OTSClient(endPoint, accessId, accessKey, instanceName, config.createConfiguration());
     }
 
     @Override
@@ -156,9 +160,7 @@ public class OTSDatabaseConnection extends AbstractDatabaseConnection {
         writer.startTAG("Attr");
         writer.attr("endPoint", endPoint);
         writer.attr("accessId", accessId);
-        if (StringUtils.isNotEmpty(accessKey)) {
-            writer.attr("accessKey", CodeUtils.passwordEncode(accessKey));
-        }
+        writer.attr("accessKey", accessKey);
         writer.attr("instanceName", instanceName);
         if (StringUtils.isNotEmpty(options)) {
             writer.attr("options", options);

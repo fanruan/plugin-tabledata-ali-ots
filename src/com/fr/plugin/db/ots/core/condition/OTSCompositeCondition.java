@@ -15,10 +15,21 @@ import java.util.List;
  */
 public class OTSCompositeCondition extends AbstractOTSCondtion {
 
+    private CompositeCondition.LogicOperator logicOperator;
+
     private List<OTSCondition> conditionList;
 
     public OTSCompositeCondition() {
 
+    }
+
+    @Override
+    public CompositeCondition.LogicOperator getLogicOperator() {
+        return logicOperator;
+    }
+
+    public void setLogicOperator(CompositeCondition.LogicOperator logicOperator) {
+        this.logicOperator = logicOperator;
     }
 
     @Override

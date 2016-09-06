@@ -50,7 +50,7 @@ public class OTSConnectionChosePane extends BasicPane {
                 }
                 OTSDatabaseConnection connection = DatasourceManager.getProviderInstance().getConnection(name, OTSDatabaseConnection.class);
                 if (connection != null) {
-                    listAllDBNames(connection);
+                    listAllTables(connection);
                 }
             }
         });
@@ -62,7 +62,7 @@ public class OTSConnectionChosePane extends BasicPane {
         listModel.clear();
     }
 
-    private void listAllDBNames(final OTSDatabaseConnection connection) {
+    private void listAllTables(final OTSDatabaseConnection connection) {
         clearList();
         new SwingWorker<String[], Void>() {
 

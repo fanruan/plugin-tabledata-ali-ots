@@ -1,6 +1,7 @@
 package com.fr.plugin.db.ots.core;
 
 import com.aliyun.openservices.ots.OTSClient;
+import com.aliyun.openservices.ots.model.ColumnValue;
 import com.aliyun.openservices.ots.model.RangeIteratorParameter;
 import com.aliyun.openservices.ots.model.Row;
 import com.aliyun.openservices.ots.model.RowPrimaryKey;
@@ -11,8 +12,10 @@ import com.fr.plugin.PluginLicense;
 import com.fr.plugin.PluginLicenseManager;
 import com.fr.plugin.db.ots.core.condition.OTSCondition;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by richie on 16/1/22.
@@ -20,7 +23,6 @@ import java.util.List;
 public class OTSTableDataModel implements DataModel {
 
 
-    private OTSClient otsClient;
     private List<String> columnNames;
     private List<List<Object>> data;
 
@@ -35,7 +37,7 @@ public class OTSTableDataModel implements DataModel {
         if (pluginLicense.isAvailable() || isDesign()) {
             initData(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
         } else {
-            throw new RuntimeException("MongoDB Plugin License Expired!");
+            throw new RuntimeException("OTS Database Plugin License Expired!");
         }
     }
 
@@ -55,15 +57,25 @@ public class OTSTableDataModel implements DataModel {
         if (condition != null) {
             param.setFilter(condition.createColumnCondition());
         }
-
         OTSClient otsClient = mc.createOTSClient();
+
         Iterator<Row> rowIt = otsClient.createRangeIterator(param);
         int totalRows = 0;
+        columnNames = new ArrayList<String>();
+        data = new ArrayList<List<Object>>();
         while (rowIt.hasNext()) {
+            if (rowCount != -1 && totalRows > rowCount) {
+                break;
+            }
             Row row = rowIt.next();
-
+            Map<String, ColumnValue> item = row.getColumns();
+            List<Object> rowData = new ArrayList<Object>();
+            for (Map.Entry<String, ColumnValue> entry : item.entrySet()) {
+                columnNames.add(entry.getKey());
+                rowData.add(OTSHelper.convertColumnValueToObject(entry.getValue()));
+            }
+            data.add(rowData);
             totalRows++;
-            System.out.println(row);
         }
         otsClient.shutdown();
     }
