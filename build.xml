@@ -98,24 +98,7 @@
 
     </target>
 
-    <target name="jar-obfuse" depends="super_jar">
-        <taskdef name="yguard" classname="com.yworks.yguard.YGuardTask" classpath="yguard.jar"/>
-        <yguard>
-            <inoutpair in="${plugin-jar}" out="${plugin-jar}"/>
-            <obfuscate>
-                <expose>
-                    <class classes="protected" methods="protected"
-                           fields="protected">
-                        <patternset>
-                            <include name="com.fr.plugin.db.ots."/>
-                        </patternset>
-                    </class>
-                </expose>
-            </obfuscate>
-        </yguard>
-    </target>
-
-    <target name="jar" depends="jar-obfuse">
+    <target name="jar" depends="super_jar">
         <antcall target="zip"/>
     </target>
 

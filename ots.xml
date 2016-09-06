@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Config enable="false">
+    <ProxyPort>12</ProxyPort>
+    <ProxyHost>abs</ProxyHost>
+    <ProxyUsername>u</ProxyUsername>
+    <ProxyPassword>p</ProxyPassword>
+    <ProxyDomain>d</ProxyDomain>
+    <ProxyWorkstation>w</ProxyWorkstation>
+    <UserAgent>a</UserAgent>
+</Config>

@@ -5,7 +5,7 @@
     <active>yes</active>
     <version>1.0</version>
     <env-version>8.0</env-version>
-	<jartime>2016-05-20</jartime>
+    <jartime>2016-05-20</jartime>
     <vendor>finereport.richie</vendor>
     <description><![CDATA[可以连接阿里云的OTS数据库并进行查询。]]></description>
     <change-notes><![CDATA[
@@ -13,13 +13,17 @@
     ]]></change-notes>
     <extra-core>
         <LocaleFinder class="com.fr.plugin.db.ots.OTSLocaleFinder"/>
+        <XMLFileManagerProvider class="com.fr.plugin.db.ots.core.OTSConfigManager"/>
     </extra-core>
     <extra-report>
-        
+
     </extra-report>
     <extra-designer>
         <ConnectionProvider class="com.fr.plugin.db.ots.OTSConnectionImpl"/>
         <TableDataDefineProvider class="com.fr.plugin.db.ots.OTSTableDataDefine"/>
         <ServerTableDataDefineProvider class="com.fr.plugin.db.ots.OTSTableDataDefine"/>
     </extra-designer>
+    <move-after-install>
+        <File name="ots.xml" dir="/resources" operation="0"/>
+    </move-after-install>
 </plugin>
