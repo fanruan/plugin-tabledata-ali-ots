@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by richie on 16/9/5.
@@ -61,6 +62,22 @@ public class OTSConditionEditPane extends BasicPane {
                 LayoutUtils.layoutContainer(contentPane);
             }
         });
+        removeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Iterator<OTSConditionItemPane> iterator = paneList.iterator();
+                while (iterator.hasNext()) {
+                    OTSConditionItemPane itemPane = iterator.next();
+                    if (itemPane.isSelected()) {
+                        iterator.remove();
+                        contentPane.remove(itemPane);
+                    }
+                }
+                contentPane.revalidate();
+                contentPane.repaint();
+            }
+        });
+
 
     }
 

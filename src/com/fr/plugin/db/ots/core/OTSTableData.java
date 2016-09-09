@@ -190,9 +190,9 @@ public class OTSTableData extends AbstractParameterTableData {
                             keyValue = PrimaryKeyValue.fromString(xmLableReader.getAttrAsString("value", null));
                         } else if ("long".equals(type)) {
                             keyValue = PrimaryKeyValue.fromLong(xmLableReader.getAttrAsLong("value", 0));
-                        } else if ("type".equals("isInfMin")) {
+                        } else if (type.equals("isInfMin")) {
                             keyValue = PrimaryKeyValue.INF_MIN;
-                        } else if ("type".equals("isInfMax")) {
+                        } else if (type.equals("isInfMax")) {
                             keyValue = PrimaryKeyValue.INF_MAX;
                         }
                         if (keyValue != null) {

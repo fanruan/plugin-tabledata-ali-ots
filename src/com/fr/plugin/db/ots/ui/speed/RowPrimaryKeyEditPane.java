@@ -54,7 +54,8 @@ public class RowPrimaryKeyEditPane extends BasicPane {
                         contentPane.remove(itemPane);
                     }
                 }
-                LayoutUtils.layoutContainer(contentPane);
+                contentPane.revalidate();
+                contentPane.repaint();
             }
         });
 

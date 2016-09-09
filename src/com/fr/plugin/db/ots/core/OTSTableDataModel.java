@@ -1,10 +1,7 @@
 package com.fr.plugin.db.ots.core;
 
 import com.aliyun.openservices.ots.OTSClient;
-import com.aliyun.openservices.ots.model.ColumnValue;
-import com.aliyun.openservices.ots.model.RangeIteratorParameter;
-import com.aliyun.openservices.ots.model.Row;
-import com.aliyun.openservices.ots.model.RowPrimaryKey;
+import com.aliyun.openservices.ots.model.*;
 import com.fr.general.ModuleContext;
 import com.fr.general.data.DataModel;
 import com.fr.general.data.TableDataException;
@@ -12,10 +9,7 @@ import com.fr.plugin.PluginLicense;
 import com.fr.plugin.PluginLicenseManager;
 import com.fr.plugin.db.ots.core.condition.OTSCondition;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by richie on 16/1/22.
@@ -51,6 +45,45 @@ public class OTSTableDataModel implements DataModel {
                                        RowPrimaryKey endRowPrimaryKey,
                                        OTSCondition condition,
                                        int rowCount) {
+        loadBatch(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
+        //loadDataByRange(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
+        //loadByRow(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
+    }
+
+    private void loadBatch(OTSDatabaseConnection mc,
+                           String tableName,
+                           RowPrimaryKey startRowPrimaryKey,
+                           RowPrimaryKey endRowPrimaryKey,
+                           OTSCondition condition,
+                           int rowCount) {
+        OTSClient client = mc.createOTSClient();
+        List<Row> rows = OTSHelper.batchGetRow(client, tableName, startRowPrimaryKey, endRowPrimaryKey, condition);
+        Iterator<Row> rowIt = rows.iterator();
+        fillRowData(rowIt, rowCount);
+        client.shutdown();
+    }
+
+    private void loadByRow(OTSDatabaseConnection mc,
+                           String tableName,
+                           RowPrimaryKey startRowPrimaryKey,
+                           RowPrimaryKey endRowPrimaryKey,
+                           OTSCondition condition,
+                           int rowCount) {
+        OTSClient client = mc.createOTSClient();
+        Row row = OTSHelper.getRowWithFilter(client, tableName, startRowPrimaryKey, condition);
+        Map<String, ColumnValue> item = row.getColumns();
+        for (Map.Entry<String, ColumnValue> entry : item.entrySet()) {
+
+        }
+
+    }
+
+    private void loadDataByRange(OTSDatabaseConnection mc,
+                                 String tableName,
+                                 RowPrimaryKey startRowPrimaryKey,
+                                 RowPrimaryKey endRowPrimaryKey,
+                                 OTSCondition condition,
+                                 int rowCount) {
         RangeIteratorParameter param = new RangeIteratorParameter(tableName);
         if (startRowPrimaryKey != null) {
             param.setInclusiveStartPrimaryKey(startRowPrimaryKey);
@@ -58,14 +91,20 @@ public class OTSTableDataModel implements DataModel {
         if (endRowPrimaryKey != null) {
             param.setExclusiveEndPrimaryKey(endRowPrimaryKey);
         }
+
         if (condition != null) {
             param.setFilter(condition.createColumnCondition());
         }
         OTSClient otsClient = mc.createOTSClient();
 
         Iterator<Row> rowIt = otsClient.createRangeIterator(param);
+        fillRowData(rowIt, rowCount);
+        otsClient.shutdown();
+    }
+
+    private void fillRowData(Iterator<Row> rowIt, int rowCount) {
         int totalRows = 0;
-        columnNames = new ArrayList<String>();
+        Set<String> tmp = new HashSet<String>();
         data = new ArrayList<List<Object>>();
         while (rowIt.hasNext()) {
             if (rowCount != -1 && totalRows > rowCount) {
@@ -75,13 +114,13 @@ public class OTSTableDataModel implements DataModel {
             Map<String, ColumnValue> item = row.getColumns();
             List<Object> rowData = new ArrayList<Object>();
             for (Map.Entry<String, ColumnValue> entry : item.entrySet()) {
-                columnNames.add(entry.getKey());
+                tmp.add(entry.getKey());
                 rowData.add(OTSHelper.convertColumnValueToObject(entry.getValue()));
             }
             data.add(rowData);
             totalRows++;
         }
-        otsClient.shutdown();
+        columnNames = new ArrayList<String>(tmp);
     }
 
 

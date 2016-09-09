@@ -77,6 +77,10 @@ public class OTSConditionItemPane extends BasicPane {
         return isHead;
     }
 
+    public boolean isSelected() {
+        return checkBox.isSelected();
+    }
+
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(640, 24);
