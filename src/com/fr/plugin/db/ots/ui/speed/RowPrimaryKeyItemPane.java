@@ -1,19 +1,21 @@
 package com.fr.plugin.db.ots.ui.speed;
 
-import com.aliyun.openservices.ots.model.PrimaryKeyType;
-import com.aliyun.openservices.ots.model.PrimaryKeyValue;
 import com.fr.design.dialog.BasicPane;
 import com.fr.design.editor.ValueEditorPane;
 import com.fr.design.editor.ValueEditorPaneFactory;
 import com.fr.design.editor.editor.Editor;
+import com.fr.design.editor.editor.FormulaEditor;
 import com.fr.design.editor.editor.LongEditor;
 import com.fr.design.editor.editor.TextEditor;
 import com.fr.design.gui.icheckbox.UICheckBox;
 import com.fr.design.gui.ilable.UILabel;
 import com.fr.design.gui.itextfield.UITextField;
 import com.fr.design.utils.gui.GUICoreUtils;
-import com.fr.general.GeneralUtils;
 import com.fr.general.Inter;
+import com.fr.plugin.db.ots.core.primary.OTSPrimaryKeyValue;
+import com.fr.plugin.db.ots.ui.speed.pv.FormulaPrimaryKeyValueEditor;
+import com.fr.plugin.db.ots.ui.speed.pv.LongPrimaryKeyValueEditor;
+import com.fr.plugin.db.ots.ui.speed.pv.StringPrimaryKeyValueEditor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,9 +27,9 @@ public class RowPrimaryKeyItemPane extends BasicPane {
 
     private UITextField columnNameTextField;
     private ValueEditorPane valueEditorPane = ValueEditorPaneFactory.createValueEditorPane(new Editor[]{
-            new TextEditor(),
-            new LongEditor(0L, Inter.getLocText("Plugin-OTS_Type_Long")),
-            new InfEditor()
+            new StringPrimaryKeyValueEditor(),
+            new LongPrimaryKeyValueEditor(),
+            new FormulaPrimaryKeyValueEditor(Inter.getLocText("Plugin-OTS_Formula"))
     });
     private UICheckBox checkBox;
 
@@ -36,7 +38,7 @@ public class RowPrimaryKeyItemPane extends BasicPane {
         this(null, null);
     }
 
-    public RowPrimaryKeyItemPane(String name, PrimaryKeyValue primaryKeyValue) {
+    public RowPrimaryKeyItemPane(String name, OTSPrimaryKeyValue primaryKeyValue) {
         setLayout(new BorderLayout());
         JPanel firstItemPane = new JPanel(new GridLayout(1, 2));
         add(firstItemPane, BorderLayout.CENTER);
@@ -51,16 +53,7 @@ public class RowPrimaryKeyItemPane extends BasicPane {
                 new UILabel(Inter.getLocText("Plugin-OTS_Column_Value")), BorderLayout.WEST,
                 valueEditorPane, BorderLayout.CENTER
         ));
-        if (primaryKeyValue != null) {
-            PrimaryKeyType keyType = primaryKeyValue.getType();
-            if (keyType == PrimaryKeyType.STRING) {
-                valueEditorPane.populate(primaryKeyValue.asString());
-            } else if (keyType == PrimaryKeyType.INTEGER) {
-                valueEditorPane.populate(primaryKeyValue.asLong());
-            } else {
-                valueEditorPane.populate(primaryKeyValue);
-            }
-        }
+        valueEditorPane.populate(primaryKeyValue);
         checkBox = new UICheckBox();
         add(checkBox, BorderLayout.WEST);
     }
@@ -74,15 +67,8 @@ public class RowPrimaryKeyItemPane extends BasicPane {
         return columnNameTextField.getText();
     }
 
-    public PrimaryKeyValue getPrimaryKeyValue() {
-        Object data = valueEditorPane.update();
-        if (data instanceof Long) {
-            return PrimaryKeyValue.fromLong(GeneralUtils.objectToNumber(data).longValue());
-        } else if (data instanceof PrimaryKeyValue) {
-            return (PrimaryKeyValue)data;
-        } else {
-            return PrimaryKeyValue.fromString(GeneralUtils.objectToString(data));
-        }
+    public OTSPrimaryKeyValue getPrimaryKeyValue() {
+        return (OTSPrimaryKeyValue) valueEditorPane.update();
     }
 
     public boolean isSelected() {

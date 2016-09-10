@@ -1,7 +1,10 @@
 package com.fr.plugin.db.ots.core;
 
 import com.aliyun.openservices.ots.OTSClient;
-import com.aliyun.openservices.ots.model.*;
+import com.aliyun.openservices.ots.model.ColumnValue;
+import com.aliyun.openservices.ots.model.RangeIteratorParameter;
+import com.aliyun.openservices.ots.model.Row;
+import com.aliyun.openservices.ots.model.RowPrimaryKey;
 import com.fr.general.ModuleContext;
 import com.fr.general.data.DataModel;
 import com.fr.general.data.TableDataException;
@@ -63,20 +66,6 @@ public class OTSTableDataModel implements DataModel {
         client.shutdown();
     }
 
-    private void loadByRow(OTSDatabaseConnection mc,
-                           String tableName,
-                           RowPrimaryKey startRowPrimaryKey,
-                           RowPrimaryKey endRowPrimaryKey,
-                           OTSCondition condition,
-                           int rowCount) {
-        OTSClient client = mc.createOTSClient();
-        Row row = OTSHelper.getRowWithFilter(client, tableName, startRowPrimaryKey, condition);
-        Map<String, ColumnValue> item = row.getColumns();
-        for (Map.Entry<String, ColumnValue> entry : item.entrySet()) {
-
-        }
-
-    }
 
     private void loadDataByRange(OTSDatabaseConnection mc,
                                  String tableName,

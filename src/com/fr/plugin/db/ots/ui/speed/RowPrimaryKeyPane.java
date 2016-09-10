@@ -7,6 +7,7 @@ import com.fr.design.dialog.DialogActionAdapter;
 import com.fr.design.gui.ibutton.UIButton;
 import com.fr.design.gui.ilable.UILabel;
 import com.fr.general.Inter;
+import com.fr.plugin.db.ots.core.primary.OTSRowPrimaryKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +20,7 @@ import java.awt.event.ActionListener;
 public class RowPrimaryKeyPane extends BasicPane {
 
     private UILabel countLabel;
-    private RowPrimaryKey rowPrimaryKey;
+    private OTSRowPrimaryKey rowPrimaryKey;
 
     public RowPrimaryKeyPane() {
         setLayout(new BorderLayout());
@@ -48,14 +49,14 @@ public class RowPrimaryKeyPane extends BasicPane {
     }
 
     private void updateRowPrimaryKeyCount() {
-        countLabel.setText((rowPrimaryKey == null ? 0 : rowPrimaryKey.getPrimaryKey().size()) + Inter.getLocText("Plugin-OTS_Primary_Key_Count"));
+        countLabel.setText((rowPrimaryKey == null ? 0 : rowPrimaryKey.getKeyValueCount()) + Inter.getLocText("Plugin-OTS_Primary_Key_Count"));
     }
 
-    public RowPrimaryKey update() {
+    public OTSRowPrimaryKey update() {
         return rowPrimaryKey;
     }
 
-    public void populate(RowPrimaryKey rowPrimaryKey) {
+    public void populate(OTSRowPrimaryKey rowPrimaryKey) {
         this.rowPrimaryKey = rowPrimaryKey;
         updateRowPrimaryKeyCount();
     }

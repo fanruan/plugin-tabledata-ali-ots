@@ -10,7 +10,7 @@ import javax.swing.*;
 /**
  * Created by richie on 16/9/5.
  */
-public class DoubleColumnValueEditor extends NumberEditor {
+public class DoubleColumnValueEditor extends NumberEditor<ColumnValue> {
 
     public DoubleColumnValueEditor() {
         super(ColumnValue.fromDouble(0), "小数");

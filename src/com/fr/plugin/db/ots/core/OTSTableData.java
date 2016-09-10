@@ -16,6 +16,8 @@ import com.fr.general.data.DataModel;
 import com.fr.general.xml.GeneralXMLTools;
 import com.fr.plugin.ExtraClassManager;
 import com.fr.plugin.db.ots.core.condition.OTSCondition;
+import com.fr.plugin.db.ots.core.primary.OTSPrimaryKeyValue;
+import com.fr.plugin.db.ots.core.primary.OTSRowPrimaryKey;
 import com.fr.script.Calculator;
 import com.fr.stable.ArrayUtils;
 import com.fr.stable.ParameterProvider;
@@ -61,8 +63,8 @@ public class OTSTableData extends AbstractParameterTableData {
 
     private String tableName;
 
-    private RowPrimaryKey startRowPrimaryKey;
-    private RowPrimaryKey endRowPrimaryKey;
+    private OTSRowPrimaryKey startRowPrimaryKey;
+    private OTSRowPrimaryKey endRowPrimaryKey;
 
     private OTSCondition condition;
 
@@ -74,19 +76,19 @@ public class OTSTableData extends AbstractParameterTableData {
         this.tableName = tableName;
     }
 
-    public RowPrimaryKey getStartRowPrimaryKey() {
+    public OTSRowPrimaryKey getStartRowPrimaryKey() {
         return startRowPrimaryKey;
     }
 
-    public void setStartRowPrimaryKey(RowPrimaryKey startRowPrimaryKey) {
+    public void setStartRowPrimaryKey(OTSRowPrimaryKey startRowPrimaryKey) {
         this.startRowPrimaryKey = startRowPrimaryKey;
     }
 
-    public RowPrimaryKey getEndRowPrimaryKey() {
+    public OTSRowPrimaryKey getEndRowPrimaryKey() {
         return endRowPrimaryKey;
     }
 
-    public void setEndRowPrimaryKey(RowPrimaryKey endRowPrimaryKey) {
+    public void setEndRowPrimaryKey(OTSRowPrimaryKey endRowPrimaryKey) {
         this.endRowPrimaryKey = endRowPrimaryKey;
     }
 
@@ -128,8 +130,8 @@ public class OTSTableData extends AbstractParameterTableData {
             if (mc != null) {
                 return new OTSTableDataModel(mc,
                         tableName,
-                        startRowPrimaryKey,
-                        endRowPrimaryKey,
+                        startRowPrimaryKey == null ? null : startRowPrimaryKey.createRowPrimaryKey(calculator),
+                        endRowPrimaryKey == null ? null: endRowPrimaryKey.createRowPrimaryKey(calculator),
                         condition,
                         rowCount);
             }
@@ -152,7 +154,7 @@ public class OTSTableData extends AbstractParameterTableData {
         }
     }
 
-    public void readXML(XMLableReader reader) {
+    public void readXML(final XMLableReader reader) {
         super.readXML(reader);
 
         if (reader.isChildNode()) {
@@ -166,13 +168,31 @@ public class OTSTableData extends AbstractParameterTableData {
             } else if (ATTR_TAG.equals(tagName)) {
                 tableName = reader.getAttrAsString("tableName", StringUtils.EMPTY);
             } else if ("StartRowPrimaryKey".equals(tagName)) {
-                startRowPrimaryKey = readRowPrimaryKey(reader);
+                startRowPrimaryKey = readOTSPrimaryKeyValue(reader);
             } else if ("EndRowPrimaryKey".equals(tagName)) {
-                endRowPrimaryKey = readRowPrimaryKey(reader);
+                OTSRowPrimaryKey key = new OTSRowPrimaryKey();
+                key.readXML(reader);
+                endRowPrimaryKey = key;
             } else if (OTSCondition.XML_TAG.equals(tagName)) {
                 condition = (OTSCondition) GeneralXMLTools.readXMLable(reader);
             }
         }
+    }
+
+    private OTSRowPrimaryKey readOTSPrimaryKeyValue(final XMLableReader reader) {
+        final OTSRowPrimaryKey rowPrimaryKey = new OTSRowPrimaryKey();
+        reader.readXMLObject(new XMLReadable() {
+            @Override
+            public void readXML(XMLableReader xmLableReader) {
+                if (reader.isChildNode()) {
+                    String tagName = reader.getTagName();
+                    if (tagName.equals(OTSPrimaryKeyValue.XML_TAG)) {
+                        rowPrimaryKey.readXML(reader);
+                    }
+                }
+            }
+        });
+        return rowPrimaryKey;
     }
 
     private RowPrimaryKey readRowPrimaryKey(final XMLableReader reader) {
@@ -216,12 +236,12 @@ public class OTSTableData extends AbstractParameterTableData {
         writer.end();
         if (startRowPrimaryKey != null) {
             writer.startTAG("StartRowPrimaryKey");
-            writeRowPrimaryKey(writer, startRowPrimaryKey);
+            startRowPrimaryKey.writeXML(writer);
             writer.end();
         }
         if (endRowPrimaryKey != null) {
             writer.startTAG("EndRowPrimaryKey");
-            writeRowPrimaryKey(writer, endRowPrimaryKey);
+            endRowPrimaryKey.writeXML(writer);
             writer.end();
         }
         if (condition != null) {

@@ -1,6 +1,5 @@
 package com.fr.plugin.db.ots.ui.speed.cv;
 
-import com.aliyun.openservices.ots.model.ColumnValue;
 import com.fr.design.editor.editor.Editor;
 import com.fr.design.gui.itextfield.UINumberField;
 import com.fr.design.gui.itextfield.UITextField;
@@ -13,7 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 
-public abstract class NumberEditor extends Editor<ColumnValue> {
+public abstract class NumberEditor<T> extends Editor<T> {
     private static final long serialVersionUID = 1L;
     protected UINumberField numberField;
 
@@ -25,7 +24,7 @@ public abstract class NumberEditor extends Editor<ColumnValue> {
     }
 
 
-    public NumberEditor(ColumnValue value, String name) {
+    public NumberEditor(T value, String name) {
         this.setLayout(FRGUIPaneFactory.createBorderLayout());
         numberField = new UINumberField();
         this.add(numberField, BorderLayout.CENTER);

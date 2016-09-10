@@ -10,7 +10,7 @@ import javax.swing.*;
 /**
  * Created by richie on 16/9/5.
  */
-public class LongColumnValueEditor extends NumberEditor {
+public class LongColumnValueEditor extends NumberEditor<ColumnValue> {
 
     public LongColumnValueEditor() {
         super(ColumnValue.fromLong(0), "整数");

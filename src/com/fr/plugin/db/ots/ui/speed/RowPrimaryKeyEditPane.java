@@ -6,6 +6,8 @@ import com.fr.design.dialog.BasicPane;
 import com.fr.design.gui.ibutton.UIButton;
 import com.fr.design.utils.gui.LayoutUtils;
 import com.fr.general.Inter;
+import com.fr.plugin.db.ots.core.primary.OTSPrimaryKeyValue;
+import com.fr.plugin.db.ots.core.primary.OTSRowPrimaryKey;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by richie on 16/9/5.
@@ -66,21 +69,24 @@ public class RowPrimaryKeyEditPane extends BasicPane {
         listPane = new ArrayList<RowPrimaryKeyItemPane>();
     }
 
-    public RowPrimaryKey update() {
-        RowPrimaryKey rowPrimaryKey = new RowPrimaryKey();
+    public OTSRowPrimaryKey update() {
+        OTSRowPrimaryKey rowPrimaryKey = new OTSRowPrimaryKey();
         for (RowPrimaryKeyItemPane itemPane : listPane) {
             rowPrimaryKey.addPrimaryKeyColumn(itemPane.getKeyName(), itemPane.getPrimaryKeyValue());
         }
         return rowPrimaryKey;
     }
 
-    public void populate(RowPrimaryKey rowPrimaryKey) {
+    public void populate(OTSRowPrimaryKey rowPrimaryKey) {
         contentPane.removeAll();
         listPane.clear();
         if (rowPrimaryKey != null) {
-            for (Map.Entry<String, PrimaryKeyValue> entry : rowPrimaryKey.getPrimaryKey().entrySet()) {
-                RowPrimaryKeyItemPane itemPane = new RowPrimaryKeyItemPane(entry.getKey(), entry.getValue());
-                addItemPane(itemPane);
+            Set<Map.Entry<String, OTSPrimaryKeyValue>> set = rowPrimaryKey.getEntrySet();
+            if (set != null) {
+                for (Map.Entry<String, OTSPrimaryKeyValue> entry : set) {
+                    RowPrimaryKeyItemPane itemPane = new RowPrimaryKeyItemPane(entry.getKey(), entry.getValue());
+                    addItemPane(itemPane);
+                }
             }
             LayoutUtils.layoutContainer(this);
         }

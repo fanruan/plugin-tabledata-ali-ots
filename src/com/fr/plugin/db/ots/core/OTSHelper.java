@@ -111,6 +111,7 @@ public class OTSHelper {
             result = client.batchGetRow(request);
         } while (true);
 
+        System.out.println(String.format("查询成功%d行数据。", succeedRows.size()));
         return succeedRows;
     }
 
@@ -130,6 +131,14 @@ public class OTSHelper {
         GetRowRequest request = new GetRowRequest();
         request.setRowQueryCriteria(criteria);
         GetRowResult result = client.getRow(request);
-        return result.getRow();
+        Row row = result.getRow();
+        System.out.println("Row returned (name == 'lilei'): " + row.getColumns());
+
+
+        // 而目前表中的该行数据不满足该条件，所以不会返回。
+        result = client.getRow(request);
+        row = result.getRow();
+        System.out.println("Row returned (name == 'lilei' and isstudent == true): " + row.getColumns());
+        return row;
     }
 }
