@@ -3,13 +3,15 @@
     <id>com.fr.solution.plugin.db.ots</id>
     <name><![CDATA[阿里云OTS数据集]]></name>
     <active>yes</active>
-    <version>4.0</version>
+    <version>5.0</version>
     <env-version>8.0</env-version>
     <jartime>2016-05-20</jartime>
     <vendor>finereport.richie</vendor>
     <description><![CDATA[可以连接阿里云的OTS数据库并进行查询。]]></description>
     <change-notes><![CDATA[
         [2016-09-05]初始化插件</p>
+        [2016-09-10]主键设置支持公式</p>
+        [2016-09-10]增加范围查询</p>
     ]]></change-notes>
     <extra-core>
         <LocaleFinder class="com.fr.plugin.db.ots.OTSLocaleFinder"/>

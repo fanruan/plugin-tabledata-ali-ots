@@ -1,6 +1,7 @@
 package com.fr.plugin.db.ots.ui;
 
 import com.fr.design.dialog.BasicPane;
+import com.fr.design.gui.icheckbox.UICheckBox;
 import com.fr.design.gui.ilable.ActionLabel;
 import com.fr.design.gui.ilable.UILabel;
 import com.fr.design.gui.itextfield.UITextField;
@@ -29,6 +30,7 @@ public class OTSQueryPane extends BasicPane {
     private RowPrimaryKeyPane startRowPrimaryKeyPane;
     private RowPrimaryKeyPane endRowPrimaryKeyPane;
     private OTSConditionPane conditionPane;
+    private UICheckBox rangeCheckBox;
 
     public OTSQueryPane() {
         setLayout(new BorderLayout());
@@ -46,12 +48,14 @@ public class OTSQueryPane extends BasicPane {
                 }
             }
         });
+        rangeCheckBox = new UICheckBox();
         startRowPrimaryKeyPane = new RowPrimaryKeyPane();
         endRowPrimaryKeyPane = new RowPrimaryKeyPane();
         conditionPane = new OTSConditionPane();
 
         Component[][] coms = new Component[][]{
                 {new UILabel(Inter.getLocText("Plugin-OTS_Table_Name") + ":"), tableNameTextField},
+                {new UILabel(Inter.getLocText("Plugin-OTS_Range_Query") + ":"), rangeCheckBox},
                 {new UILabel(Inter.getLocText("Plugin-OTS_Start_PrimaryKey") + ":"), startRowPrimaryKeyPane},
                 {new UILabel(Inter.getLocText("Plugin-OTS_End_PrimaryKey") + ":"), endRowPrimaryKeyPane},
                 {new UILabel(Inter.getLocText("Plugin-OTS_Filter_Condition") + ":"), conditionPane}
@@ -60,7 +64,7 @@ public class OTSQueryPane extends BasicPane {
         double p = TableLayout.PREFERRED;
         double f = TableLayout.FILL;
 
-        double[] rowSize = {p, p, p, p};
+        double[] rowSize = {p, p, p, p, p};
         double[] columnSize = {p, f};
 
         JPanel panel = TableLayoutHelper.createTableLayoutPane(coms, rowSize, columnSize);

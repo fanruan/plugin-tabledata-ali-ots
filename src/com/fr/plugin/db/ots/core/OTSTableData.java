@@ -63,6 +63,8 @@ public class OTSTableData extends AbstractParameterTableData {
 
     private String tableName;
 
+    private boolean rangeQuery;
+
     private OTSRowPrimaryKey startRowPrimaryKey;
     private OTSRowPrimaryKey endRowPrimaryKey;
 
@@ -74,6 +76,14 @@ public class OTSTableData extends AbstractParameterTableData {
 
     public void setTableName(String tableName) {
         this.tableName = tableName;
+    }
+
+    public boolean isRangeQuery() {
+        return rangeQuery;
+    }
+
+    public void setRangeQuery(boolean rangeQuery) {
+        this.rangeQuery = rangeQuery;
     }
 
     public OTSRowPrimaryKey getStartRowPrimaryKey() {
@@ -130,6 +140,7 @@ public class OTSTableData extends AbstractParameterTableData {
             if (mc != null) {
                 return new OTSTableDataModel(mc,
                         tableName,
+                        rangeQuery,
                         startRowPrimaryKey == null ? null : startRowPrimaryKey.createRowPrimaryKey(calculator),
                         endRowPrimaryKey == null ? null: endRowPrimaryKey.createRowPrimaryKey(calculator),
                         condition,
@@ -167,6 +178,7 @@ public class OTSTableData extends AbstractParameterTableData {
                 }
             } else if (ATTR_TAG.equals(tagName)) {
                 tableName = reader.getAttrAsString("tableName", StringUtils.EMPTY);
+                rangeQuery = reader.getAttrAsBoolean("rangeQuery", false);
             } else if ("StartRowPrimaryKey".equals(tagName)) {
                 startRowPrimaryKey = readOTSPrimaryKeyValue(reader);
             } else if ("EndRowPrimaryKey".equals(tagName)) {
@@ -233,6 +245,7 @@ public class OTSTableData extends AbstractParameterTableData {
         }
         writer.startTAG(ATTR_TAG);
         writer.attr("tableName", tableName);
+        writer.attr("rangeQuery", rangeQuery);
         writer.end();
         if (startRowPrimaryKey != null) {
             writer.startTAG("StartRowPrimaryKey");

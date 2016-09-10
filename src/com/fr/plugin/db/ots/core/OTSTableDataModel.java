@@ -26,13 +26,14 @@ public class OTSTableDataModel implements DataModel {
 
     public OTSTableDataModel(OTSDatabaseConnection mc,
                              String tableName,
+                             boolean rangeQuery,
                              RowPrimaryKey startRowPrimaryKey,
                              RowPrimaryKey endRowPrimaryKey,
                              OTSCondition condition,
                              int rowCount) {
         PluginLicense pluginLicense = PluginLicenseManager.getInstance().getPluginLicenseByID(OTSConstants.PLUGIN_ID);
         if (pluginLicense.isAvailable() || isDesign()) {
-            initData(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
+            initData(mc, tableName, rangeQuery, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
         } else {
             throw new RuntimeException("OTS Database Plugin License Expired!");
         }
@@ -44,12 +45,16 @@ public class OTSTableDataModel implements DataModel {
 
     private synchronized void initData(OTSDatabaseConnection mc,
                                        String tableName,
+                                       boolean rangeQuery,
                                        RowPrimaryKey startRowPrimaryKey,
                                        RowPrimaryKey endRowPrimaryKey,
                                        OTSCondition condition,
                                        int rowCount) {
-        loadBatch(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
-        //loadDataByRange(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
+        if (rangeQuery) {
+            loadDataByRange(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
+        } else {
+            loadBatch(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
+        }
         //loadByRow(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
     }
 
