@@ -4,7 +4,9 @@ import com.aliyun.openservices.ots.model.ColumnType;
 import com.aliyun.openservices.ots.model.ColumnValue;
 import com.fr.design.editor.editor.Editor;
 import com.fr.design.gui.itextfield.UITextField;
+import com.fr.general.GeneralUtils;
 import com.fr.general.IOUtils;
+import com.fr.plugin.db.ots.core.condition.OTSColumnValue;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +14,7 @@ import java.awt.*;
 /**
  * Created by richie on 16/9/5.
  */
-public class StringColumnValueEditor extends Editor<ColumnValue> {
+public class StringColumnValueEditor extends Editor<OTSColumnValue> {
 
     private UITextField textField;
 
@@ -29,19 +31,19 @@ public class StringColumnValueEditor extends Editor<ColumnValue> {
     }
 
     @Override
-    public ColumnValue getValue() {
-        return ColumnValue.fromString(textField.getText());
+    public OTSColumnValue getValue() {
+        return new OTSColumnValue("String", textField.getText());
     }
 
     @Override
-    public void setValue(ColumnValue value) {
+    public void setValue(OTSColumnValue value) {
         if (value != null) {
-            textField.setText(value.asString());
+            textField.setText(GeneralUtils.objectToString(value.getValue()));
         }
     }
 
     @Override
     public boolean accept(Object object) {
-        return object instanceof ColumnValue && ((ColumnValue)object).getType() == ColumnType.STRING;
+        return object instanceof OTSColumnValue && ((OTSColumnValue)object).getType().equals("String");
     }
 }

@@ -1,6 +1,5 @@
 package com.fr.plugin.db.ots.ui.speed;
 
-import com.aliyun.openservices.ots.model.ColumnValue;
 import com.aliyun.openservices.ots.model.condition.CompositeCondition;
 import com.aliyun.openservices.ots.model.condition.RelationalCondition;
 import com.fr.design.dialog.BasicPane;
@@ -10,12 +9,11 @@ import com.fr.design.editor.editor.Editor;
 import com.fr.design.gui.icheckbox.UICheckBox;
 import com.fr.design.gui.icombobox.UIDictionaryComboBox;
 import com.fr.design.gui.itextfield.UITextField;
+import com.fr.general.Inter;
+import com.fr.plugin.db.ots.core.condition.OTSColumnValue;
 import com.fr.plugin.db.ots.core.condition.OTSCondition;
 import com.fr.plugin.db.ots.core.condition.OTSRelationCondition;
-import com.fr.plugin.db.ots.ui.speed.cv.BooleanColumnValueEditor;
-import com.fr.plugin.db.ots.ui.speed.cv.DoubleColumnValueEditor;
-import com.fr.plugin.db.ots.ui.speed.cv.LongColumnValueEditor;
-import com.fr.plugin.db.ots.ui.speed.cv.StringColumnValueEditor;
+import com.fr.plugin.db.ots.ui.speed.cv.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +62,8 @@ public class OTSConditionItemPane extends BasicPane {
                 new StringColumnValueEditor(),
                 new DoubleColumnValueEditor(),
                 new LongColumnValueEditor(),
-                new BooleanColumnValueEditor()
+                new BooleanColumnValueEditor(),
+                new FormulaColumnValueEditor(Inter.getLocText("Plugin-OTS_Formula"))
         });
         centerPane.add(valueEditorPane);
     }
@@ -97,9 +96,7 @@ public class OTSConditionItemPane extends BasicPane {
         condition.setColumnName(columnTextField.getText());
         condition.setCompareOperator(compareComboBox.getSelectedItem());
         Object data = valueEditorPane.update();
-        if (data instanceof ColumnValue) {
-            condition.setColumnValue((ColumnValue) data);
-        }
+        condition.setColumnValue((OTSColumnValue)data);
         return condition;
     }
 

@@ -7,7 +7,7 @@ import com.fr.stable.xml.XMLableReader;
 /**
  * Created by richie on 16/9/5.
  */
-public abstract class AbstractOTSCondtion implements OTSCondition {
+public abstract class AbstractOTSCondition implements OTSCondition {
     @Override
     public void readXML(XMLableReader xmLableReader) {
 

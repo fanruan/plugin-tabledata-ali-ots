@@ -5,12 +5,12 @@ import com.aliyun.openservices.ots.model.ColumnValue;
 import com.aliyun.openservices.ots.model.RangeIteratorParameter;
 import com.aliyun.openservices.ots.model.Row;
 import com.aliyun.openservices.ots.model.RowPrimaryKey;
+import com.aliyun.openservices.ots.model.condition.ColumnCondition;
 import com.fr.general.ModuleContext;
 import com.fr.general.data.DataModel;
 import com.fr.general.data.TableDataException;
 import com.fr.plugin.PluginLicense;
 import com.fr.plugin.PluginLicenseManager;
-import com.fr.plugin.db.ots.core.condition.OTSCondition;
 
 import java.util.*;
 
@@ -29,7 +29,7 @@ public class OTSTableDataModel implements DataModel {
                              boolean rangeQuery,
                              RowPrimaryKey startRowPrimaryKey,
                              RowPrimaryKey endRowPrimaryKey,
-                             OTSCondition condition,
+                             ColumnCondition condition,
                              int rowCount) {
         PluginLicense pluginLicense = PluginLicenseManager.getInstance().getPluginLicenseByID(OTSConstants.PLUGIN_ID);
         if (pluginLicense.isAvailable() || isDesign()) {
@@ -48,21 +48,20 @@ public class OTSTableDataModel implements DataModel {
                                        boolean rangeQuery,
                                        RowPrimaryKey startRowPrimaryKey,
                                        RowPrimaryKey endRowPrimaryKey,
-                                       OTSCondition condition,
+                                       ColumnCondition condition,
                                        int rowCount) {
         if (rangeQuery) {
             loadDataByRange(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
         } else {
             loadBatch(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
         }
-        //loadByRow(mc, tableName, startRowPrimaryKey, endRowPrimaryKey, condition, rowCount);
     }
 
     private void loadBatch(OTSDatabaseConnection mc,
                            String tableName,
                            RowPrimaryKey startRowPrimaryKey,
                            RowPrimaryKey endRowPrimaryKey,
-                           OTSCondition condition,
+                           ColumnCondition condition,
                            int rowCount) {
         OTSClient client = mc.createOTSClient();
         List<Row> rows = OTSHelper.batchGetRow(client, tableName, startRowPrimaryKey, endRowPrimaryKey, condition);
@@ -76,7 +75,7 @@ public class OTSTableDataModel implements DataModel {
                                  String tableName,
                                  RowPrimaryKey startRowPrimaryKey,
                                  RowPrimaryKey endRowPrimaryKey,
-                                 OTSCondition condition,
+                                 ColumnCondition condition,
                                  int rowCount) {
         RangeIteratorParameter param = new RangeIteratorParameter(tableName);
         if (startRowPrimaryKey != null) {
@@ -87,7 +86,7 @@ public class OTSTableDataModel implements DataModel {
         }
 
         if (condition != null) {
-            param.setFilter(condition.createColumnCondition());
+            param.setFilter(condition);
         }
         OTSClient otsClient = mc.createOTSClient();
 
@@ -98,7 +97,7 @@ public class OTSTableDataModel implements DataModel {
 
     private void fillRowData(Iterator<Row> rowIt, int rowCount) {
         int totalRows = 0;
-        Set<String> tmp = new HashSet<String>();
+        Set<String> tmp = new LinkedHashSet<String>();
         data = new ArrayList<List<Object>>();
         while (rowIt.hasNext()) {
             if (rowCount != -1 && totalRows > rowCount) {

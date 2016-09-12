@@ -3,6 +3,7 @@ package com.fr.plugin.db.ots.core.condition;
 import com.aliyun.openservices.ots.model.condition.ColumnCondition;
 import com.aliyun.openservices.ots.model.condition.CompositeCondition;
 import com.fr.general.xml.GeneralXMLTools;
+import com.fr.script.Calculator;
 import com.fr.stable.xml.XMLPrintWriter;
 import com.fr.stable.xml.XMLReadable;
 import com.fr.stable.xml.XMLableReader;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by richie on 16/9/5.
  */
-public class OTSCompositeCondition extends AbstractOTSCondtion {
+public class OTSCompositeCondition extends AbstractOTSCondition {
 
     private CompositeCondition.LogicOperator logicOperator;
 
@@ -38,7 +39,7 @@ public class OTSCompositeCondition extends AbstractOTSCondtion {
     }
 
     @Override
-    public ColumnCondition createColumnCondition() {
+    public ColumnCondition createColumnCondition(Calculator c) {
         if (conditionList == null) {
             return null;
         }
@@ -47,11 +48,11 @@ public class OTSCompositeCondition extends AbstractOTSCondtion {
         CompositeCondition notCondition = new CompositeCondition(CompositeCondition.LogicOperator.NOT);
         for (OTSCondition condition : conditionList) {
             if (condition.getLogicOperator() == CompositeCondition.LogicOperator.AND) {
-                andCondition.addCondition(condition.createColumnCondition());
+                andCondition.addCondition(condition.createColumnCondition(c));
             } else if (condition.getLogicOperator() == CompositeCondition.LogicOperator.OR) {
-                orCondition.addCondition(condition.createColumnCondition());
+                orCondition.addCondition(condition.createColumnCondition(c));
             } else if (condition.getLogicOperator() == CompositeCondition.LogicOperator.NOT) {
-                notCondition.addCondition(condition.createColumnCondition());
+                notCondition.addCondition(condition.createColumnCondition(c));
             }
         }
 

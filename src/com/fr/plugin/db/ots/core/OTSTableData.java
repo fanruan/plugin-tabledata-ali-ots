@@ -142,8 +142,8 @@ public class OTSTableData extends AbstractParameterTableData {
                         tableName,
                         rangeQuery,
                         startRowPrimaryKey == null ? null : startRowPrimaryKey.createRowPrimaryKey(calculator),
-                        endRowPrimaryKey == null ? null: endRowPrimaryKey.createRowPrimaryKey(calculator),
-                        condition,
+                        endRowPrimaryKey == null ? null : endRowPrimaryKey.createRowPrimaryKey(calculator),
+                        condition == null ? null : condition.createColumnCondition(calculator),
                         rowCount);
             }
         }
@@ -182,9 +182,7 @@ public class OTSTableData extends AbstractParameterTableData {
             } else if ("StartRowPrimaryKey".equals(tagName)) {
                 startRowPrimaryKey = readOTSPrimaryKeyValue(reader);
             } else if ("EndRowPrimaryKey".equals(tagName)) {
-                OTSRowPrimaryKey key = new OTSRowPrimaryKey();
-                key.readXML(reader);
-                endRowPrimaryKey = key;
+                endRowPrimaryKey = readOTSPrimaryKeyValue(reader);
             } else if (OTSCondition.XML_TAG.equals(tagName)) {
                 condition = (OTSCondition) GeneralXMLTools.readXMLable(reader);
             }
@@ -200,36 +198,6 @@ public class OTSTableData extends AbstractParameterTableData {
                     String tagName = reader.getTagName();
                     if (tagName.equals(OTSPrimaryKeyValue.XML_TAG)) {
                         rowPrimaryKey.readXML(reader);
-                    }
-                }
-            }
-        });
-        return rowPrimaryKey;
-    }
-
-    private RowPrimaryKey readRowPrimaryKey(final XMLableReader reader) {
-        final RowPrimaryKey rowPrimaryKey = new RowPrimaryKey();
-        reader.readXMLObject(new XMLReadable() {
-            @Override
-            public void readXML(XMLableReader xmLableReader) {
-                if (xmLableReader.isChildNode()) {
-                    String tagName = reader.getTagName();
-                    if ("PrimaryKey".equals(tagName)) {
-                        String name = xmLableReader.getAttrAsString("name", StringUtils.EMPTY);
-                        String type = xmLableReader.getAttrAsString("type", "string");
-                        PrimaryKeyValue keyValue = null;
-                        if ("string".equals(type)) {
-                            keyValue = PrimaryKeyValue.fromString(xmLableReader.getAttrAsString("value", null));
-                        } else if ("long".equals(type)) {
-                            keyValue = PrimaryKeyValue.fromLong(xmLableReader.getAttrAsLong("value", 0));
-                        } else if (type.equals("isInfMin")) {
-                            keyValue = PrimaryKeyValue.INF_MIN;
-                        } else if (type.equals("isInfMax")) {
-                            keyValue = PrimaryKeyValue.INF_MAX;
-                        }
-                        if (keyValue != null) {
-                            rowPrimaryKey.addPrimaryKeyColumn(name, keyValue);
-                        }
                     }
                 }
             }
@@ -268,7 +236,7 @@ public class OTSTableData extends AbstractParameterTableData {
             writer.attr("name", entry.getKey());
             PrimaryKeyValue keyValue = entry.getValue();
             if (keyValue.isInfMin()) {
-                writer.attr("type","isInfMin");
+                writer.attr("type", "isInfMin");
             } else if (keyValue.isInfMax()) {
                 writer.attr("type", "isInfMax");
             } else if (keyValue.getType() == PrimaryKeyType.STRING) {

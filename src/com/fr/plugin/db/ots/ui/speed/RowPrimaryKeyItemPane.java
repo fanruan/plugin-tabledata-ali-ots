@@ -14,6 +14,7 @@ import com.fr.design.utils.gui.GUICoreUtils;
 import com.fr.general.Inter;
 import com.fr.plugin.db.ots.core.primary.OTSPrimaryKeyValue;
 import com.fr.plugin.db.ots.ui.speed.pv.FormulaPrimaryKeyValueEditor;
+import com.fr.plugin.db.ots.ui.speed.pv.InfPrimaryKeyValueEditor;
 import com.fr.plugin.db.ots.ui.speed.pv.LongPrimaryKeyValueEditor;
 import com.fr.plugin.db.ots.ui.speed.pv.StringPrimaryKeyValueEditor;
 
@@ -29,6 +30,7 @@ public class RowPrimaryKeyItemPane extends BasicPane {
     private ValueEditorPane valueEditorPane = ValueEditorPaneFactory.createValueEditorPane(new Editor[]{
             new StringPrimaryKeyValueEditor(),
             new LongPrimaryKeyValueEditor(),
+            new InfPrimaryKeyValueEditor(),
             new FormulaPrimaryKeyValueEditor(Inter.getLocText("Plugin-OTS_Formula"))
     });
     private UICheckBox checkBox;

@@ -86,6 +86,7 @@ public class OTSQueryPane extends BasicPane {
             tableData.setStartRowPrimaryKey(startRowPrimaryKeyPane.update());
             tableData.setEndRowPrimaryKey(endRowPrimaryKeyPane.update());
             tableData.setTableName(tableNameTextField.getText());
+            tableData.setRangeQuery(rangeCheckBox.isSelected());
             tableData.setCondition(conditionPane.update());
         }
     }
@@ -93,6 +94,7 @@ public class OTSQueryPane extends BasicPane {
     public void populate(OTSTableData tableData) {
         if (tableData != null) {
             tableNameTextField.setText(tableData.getTableName());
+            rangeCheckBox.setSelected(tableData.isRangeQuery());
             startRowPrimaryKeyPane.populate(tableData.getStartRowPrimaryKey());
             endRowPrimaryKeyPane.populate(tableData.getEndRowPrimaryKey());
             conditionPane.populate(tableData.getCondition());

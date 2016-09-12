@@ -58,6 +58,12 @@ public class OTSPrimaryKeyValue implements XMLable {
             } catch (UtilEvalError e) {
                 FRLogger.getLogger().error(e.getMessage(), e);
             }
+        } else if ("Infinity".equals(type)) {
+            if ("__InfMin__".equals(value)) {
+                return PrimaryKeyValue.INF_MIN;
+            } else {
+                return PrimaryKeyValue.INF_MAX;
+            }
         }
         return PrimaryKeyValue.fromString(GeneralUtils.objectToString(value));
     }
@@ -72,7 +78,7 @@ public class OTSPrimaryKeyValue implements XMLable {
                     value = reader.getAttrAsLong("value", 0L);
                 } else if ("Formula".equals(type)) {
                     value = new Formula(reader.getAttrAsString("value", StringUtils.EMPTY));
-                } else {
+                }  else {
                     value = reader.getAttrAsString("value", StringUtils.EMPTY);
                 }
             }
@@ -86,6 +92,10 @@ public class OTSPrimaryKeyValue implements XMLable {
             writer.attr("type", "Long").attr("value", (Long)value);
         } else if (value instanceof Formula) {
             writer.attr("type", "Formula").attr("value", ((Formula) value).getContent());
+        } else if ("__InfMin__".equals(value)){
+            writer.attr("type", "Infinity").attr("value", "__InfMin__");
+        } else if ("__InfMax__".equals(value)){
+            writer.attr("type", "Infinity").attr("value", "__InfMax__");
         } else {
             writer.attr("type", "String").attr("value", GeneralUtils.objectToString(value));
         }

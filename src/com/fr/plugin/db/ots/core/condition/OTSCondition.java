@@ -2,6 +2,7 @@ package com.fr.plugin.db.ots.core.condition;
 
 import com.aliyun.openservices.ots.model.condition.ColumnCondition;
 import com.aliyun.openservices.ots.model.condition.CompositeCondition;
+import com.fr.script.Calculator;
 import com.fr.stable.xml.XMLable;
 
 /**
@@ -11,7 +12,7 @@ public interface OTSCondition extends XMLable {
 
     String XML_TAG = "OTSCondition";
 
-    ColumnCondition createColumnCondition();
+    ColumnCondition createColumnCondition(Calculator c);
 
     CompositeCondition.LogicOperator getLogicOperator();
 

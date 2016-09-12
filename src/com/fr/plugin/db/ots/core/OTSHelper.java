@@ -5,6 +5,7 @@ import com.aliyun.openservices.ots.OTSClient;
 import com.aliyun.openservices.ots.OTSException;
 import com.aliyun.openservices.ots.ServiceException;
 import com.aliyun.openservices.ots.model.*;
+import com.aliyun.openservices.ots.model.condition.ColumnCondition;
 import com.fr.plugin.db.ots.core.condition.OTSCondition;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class OTSHelper {
                                         String tableName,
                                         RowPrimaryKey startRowPrimaryKey,
                                         RowPrimaryKey endRowPrimaryKey,
-                                        OTSCondition condition
+                                        ColumnCondition condition
     )
             throws OTSException, ClientException {
         BatchGetRowRequest request = new BatchGetRowRequest();
@@ -56,7 +57,7 @@ public class OTSHelper {
         }
 
         if (condition != null) {
-            tableRows.setFilter(condition.createColumnCondition());
+            tableRows.setFilter(condition);
         }
 
         request.addMultiRowQueryCriteria(tableRows);
@@ -113,32 +114,5 @@ public class OTSHelper {
 
         System.out.println(String.format("查询成功%d行数据。", succeedRows.size()));
         return succeedRows;
-    }
-
-    public static Row getRowWithFilter(OTSClient client, String tableName, RowPrimaryKey primaryKeys, OTSCondition condition)
-            throws ServiceException, ClientException{
-
-        SingleRowQueryCriteria criteria = new SingleRowQueryCriteria(tableName);
-        if (primaryKeys != null) {
-
-            criteria.setPrimaryKey(primaryKeys);
-        }
-
-        if (condition != null) {
-            criteria.setFilter(condition.createColumnCondition());
-        }
-
-        GetRowRequest request = new GetRowRequest();
-        request.setRowQueryCriteria(criteria);
-        GetRowResult result = client.getRow(request);
-        Row row = result.getRow();
-        System.out.println("Row returned (name == 'lilei'): " + row.getColumns());
-
-
-        // 而目前表中的该行数据不满足该条件，所以不会返回。
-        result = client.getRow(request);
-        row = result.getRow();
-        System.out.println("Row returned (name == 'lilei' and isstudent == true): " + row.getColumns());
-        return row;
     }
 }

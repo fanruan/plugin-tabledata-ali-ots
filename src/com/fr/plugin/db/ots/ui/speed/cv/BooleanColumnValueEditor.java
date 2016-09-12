@@ -1,10 +1,9 @@
 package com.fr.plugin.db.ots.ui.speed.cv;
 
-import com.aliyun.openservices.ots.model.ColumnType;
-import com.aliyun.openservices.ots.model.ColumnValue;
 import com.fr.design.editor.editor.Editor;
 import com.fr.design.gui.icheckbox.UICheckBox;
 import com.fr.general.IOUtils;
+import com.fr.plugin.db.ots.core.condition.OTSColumnValue;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +11,7 @@ import java.awt.*;
 /**
  * Created by richie on 16/9/5.
  */
-public class BooleanColumnValueEditor extends Editor<ColumnValue> {
+public class BooleanColumnValueEditor extends Editor<OTSColumnValue> {
 
     private UICheckBox checkBox;
 
@@ -24,14 +23,14 @@ public class BooleanColumnValueEditor extends Editor<ColumnValue> {
     }
 
     @Override
-    public ColumnValue getValue() {
-        return ColumnValue.fromBoolean(checkBox.isSelected());
+    public OTSColumnValue getValue() {
+        return new OTSColumnValue("Boolean", checkBox.isSelected());
     }
 
     @Override
-    public void setValue(ColumnValue value) {
+    public void setValue(OTSColumnValue value) {
         if (value != null) {
-            checkBox.setSelected(value.asBoolean());
+            checkBox.setSelected((Boolean) value.getValue());
         }
     }
 
@@ -42,6 +41,6 @@ public class BooleanColumnValueEditor extends Editor<ColumnValue> {
 
     @Override
     public boolean accept(Object object) {
-        return object instanceof ColumnValue && ((ColumnValue) object).getType() == ColumnType.BOOLEAN;
+        return object instanceof OTSColumnValue && ((OTSColumnValue) object).getType().equals("Boolean");
     }
 }

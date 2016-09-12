@@ -4,27 +4,28 @@ import com.aliyun.openservices.ots.model.ColumnType;
 import com.aliyun.openservices.ots.model.ColumnValue;
 import com.fr.general.GeneralUtils;
 import com.fr.general.IOUtils;
+import com.fr.plugin.db.ots.core.condition.OTSColumnValue;
 
 import javax.swing.*;
 
 /**
  * Created by richie on 16/9/5.
  */
-public class DoubleColumnValueEditor extends NumberEditor<ColumnValue> {
+public class DoubleColumnValueEditor extends NumberEditor<OTSColumnValue> {
 
     public DoubleColumnValueEditor() {
-        super(ColumnValue.fromDouble(0), "小数");
+        super(new OTSColumnValue("Double", 0), "小数");
     }
 
     @Override
-    public ColumnValue getValue() {
-        return ColumnValue.fromDouble(numberField.getValue());
+    public OTSColumnValue getValue() {
+        return new OTSColumnValue("Double", numberField.getValue());
     }
 
     @Override
-    public void setValue(ColumnValue value) {
+    public void setValue(OTSColumnValue value) {
         if (value != null) {
-            numberField.setText(GeneralUtils.objectToString(value.asDouble()));
+            numberField.setText(GeneralUtils.objectToString(value.getValue()));
         }
     }
 
@@ -35,6 +36,6 @@ public class DoubleColumnValueEditor extends NumberEditor<ColumnValue> {
 
     @Override
     public boolean accept(Object object) {
-        return object instanceof ColumnValue && ((ColumnValue) object).getType() == ColumnType.DOUBLE;
+        return object instanceof OTSColumnValue && ((OTSColumnValue) object).getType().equals("Double");
     }
 }
