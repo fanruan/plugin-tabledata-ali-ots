@@ -97,23 +97,32 @@ public class OTSTableDataModel implements DataModel {
 
     private void fillRowData(Iterator<Row> rowIt, int rowCount) {
         int totalRows = 0;
-        Set<String> tmp = new LinkedHashSet<String>();
-        data = new ArrayList<List<Object>>();
+
+        Map<String, List<Object>> columnDataMap = new HashMap<String, List<Object>>();
         while (rowIt.hasNext()) {
             if (rowCount != -1 && totalRows > rowCount) {
                 break;
             }
             Row row = rowIt.next();
             Map<String, ColumnValue> item = row.getColumns();
-            List<Object> rowData = new ArrayList<Object>();
+
             for (Map.Entry<String, ColumnValue> entry : item.entrySet()) {
-                tmp.add(entry.getKey());
-                rowData.add(OTSHelper.convertColumnValueToObject(entry.getValue()));
+                String columnName = entry.getKey();
+                List<Object> columnData = columnDataMap.get(columnName);
+                if (columnData == null) {
+                    columnData = new ArrayList<Object>();
+                    columnDataMap.put(columnName, columnData);
+                }
+                columnData.add(OTSHelper.convertColumnValueToObject(entry.getValue()));
             }
-            data.add(rowData);
             totalRows++;
         }
-        columnNames = new ArrayList<String>(tmp);
+        columnNames = new ArrayList<String>();
+        data = new ArrayList<List<Object>>();
+        for (Map.Entry<String, List<Object>> entry : columnDataMap.entrySet()) {
+            columnNames.add(entry.getKey());
+            data.add(entry.getValue());
+        }
     }
 
 
@@ -129,20 +138,20 @@ public class OTSTableDataModel implements DataModel {
 
     @Override
     public boolean hasRow(int rowIndex) throws TableDataException {
-        return data != null && data.size() > rowIndex;
+        return data != null && data.get(0).size() > rowIndex;
     }
 
     @Override
     public int getRowCount() throws TableDataException {
-        return data == null ? 0 : data.size();
+        return data == null ? 0 : data.get(0).size();
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) throws TableDataException {
-        if (data != null && data.size() > rowIndex) {
-            List<Object> rowData = data.get(rowIndex);
-            if (rowData != null && rowData.size() > columnIndex) {
-                return rowData.get(columnIndex);
+        if (data != null && data.size() > columnIndex) {
+            List<Object> columnData = data.get(columnIndex);
+            if (columnData != null && columnData.size() > rowIndex) {
+                return columnData.get(rowIndex);
             }
         }
         return null;
