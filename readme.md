@@ -30,11 +30,11 @@ $installDir/WebReport/WEB-INF/lib/fr-third-8.0.jar
 ### 新建数据连接
 安装完插件后，在新建数据连接的地方可以看到OTS类型的数据连接：
 
-![1](screeshots/1.png)
+![1](screenshots/1.png)
 
 点击新建后可以看到如下的界面：
 
-![1](screeshots/2.png)
+![1](screenshots/2.png)
 
 按实际的配置填写上即可。
 
@@ -56,12 +56,12 @@ $installDir/WebReport/WEB-INF/lib/fr-third-8.0.jar
 ### 新建数据集
 在模板数据集添加的地方会出现OTS数据集：
 
-![1](screeshots/3.png)
+![1](screenshots/3.png)
 
 
 点击后会进入OTS数据集的设计界面：
 
-![1](screeshots/4.png)
+![1](screenshots/4.png)
 
 输入相应的表名和其他约束信息即可。
 
@@ -72,7 +72,7 @@ $installDir/WebReport/WEB-INF/lib/fr-third-8.0.jar
 范围查询是指不查询特定的一个值，而是查询从起点到终点的条件对应的值。
 对于字符串类型的主键，可以选择“最值”：
 
-![1](screeshots/5.png)
+![1](screenshots/5.png)
 
 起始主键设置列值为“最小值”，结束主键设置列值为“最大值”，即可查询出该主键的所有值。
 对于整数类型的主键，可以直接输入特定的数字即可，当然也可以使用最值。
@@ -81,10 +81,10 @@ $installDir/WebReport/WEB-INF/lib/fr-third-8.0.jar
 ### 过滤条件
 过滤条件可以针对不同的列进行过滤，支持多个条件以AND，OR进行合并查询：
 
-![1](screeshots/6.png)
+![1](screenshots/6.png)
 
 
 ### 预览效果
 设定好主键和查询条件后，就可以预览数据集结果了：
 
-![1](screeshots/7.png)
+![1](screenshots/7.png)
