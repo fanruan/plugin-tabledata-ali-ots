@@ -6,6 +6,7 @@ import com.aliyun.openservices.ots.model.RangeIteratorParameter;
 import com.aliyun.openservices.ots.model.Row;
 import com.aliyun.openservices.ots.model.RowPrimaryKey;
 import com.aliyun.openservices.ots.model.condition.ColumnCondition;
+import com.fr.data.AbstractDataModel;
 import com.fr.general.ModuleContext;
 import com.fr.general.data.DataModel;
 import com.fr.general.data.TableDataException;
@@ -17,7 +18,7 @@ import java.util.*;
 /**
  * Created by richie on 16/1/22.
  */
-public class OTSTableDataModel implements DataModel {
+public class OTSTableDataModel extends AbstractDataModel  {
 
 
     private List<String> columnNames;
